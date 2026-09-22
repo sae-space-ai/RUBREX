@@ -1,7 +1,11 @@
 // ============================================================
-// DATOS COMPLETOS — RÚBRICAS CLARINETE 2026/2027 — v2.0
-// Corpus íntegro: EE1 (6 UD), EE2 (6 UD), EE3 (6 UD) = 252 rúbricas
-// + Rúbricas maestras EP (10) + EE (7) = 17
+// DATOS COMPLETOS — RÚBRICAS CLARINETE 2026/2027 — v3.0
+// Corpus íntegro:
+// - Enseñanzas Elementales: EE1-EE3 (3 cursos × 6 UD × 14 rúbricas) = 252 rúbricas
+// - Enseñanzas Profesionales: EP1-EP6 (6 cursos × 6 UD × 14 rúbricas) = 504 rúbricas
+// - Rúbricas maestras EP (10) + EE (7) = 17 rúbricas
+// TOTAL IMPLEMENTADO: 756 rúbricas específicas + 17 maestras = 773 rúbricas
+// (Documento maestro completo: 840 rúbricas incluyendo EE4)
 // ============================================================
 
 export interface RubricaDesarrollada {

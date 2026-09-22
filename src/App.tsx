@@ -9,8 +9,9 @@ import {
   type MaestraRubric,
 } from './data/rubrics';
 import { bloquesEP } from './data/rubricsEP';
+import { bloquesEP456 } from './data/rubricsEP456';
 
-const bloques = [...bloquesEE, ...bloquesEP];
+const bloques = [...bloquesEE, ...bloquesEP, ...bloquesEP456];
 
 type Section = 'inicio' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep';
 
@@ -101,7 +102,7 @@ function MaestraRubricCard({ rubric }: { rubric: MaestraRubric }) {
 
 function SectionInicio() {
   const totalRubricasEE = bloquesEE.reduce((acc, b) => acc + b.uds.reduce((a, ud) => a + ud.rubricas.length, 0), 0);
-  const totalRubricasEP = bloquesEP.reduce((acc, b) => acc + b.uds.reduce((a, ud) => a + ud.rubricas.length, 0), 0);
+  const totalRubricasEP = bloquesEP.reduce((acc, b) => acc + b.uds.reduce((a, ud) => a + ud.rubricas.length, 0), 0) + bloquesEP456.reduce((acc, b) => acc + b.uds.reduce((a, ud) => a + ud.rubricas.length, 0), 0);
   const totalRubricas = totalRubricasEE + totalRubricasEP;
   const totalUDs = bloques.reduce((acc, b) => acc + b.uds.length, 0);
 
@@ -122,7 +123,7 @@ function SectionInicio() {
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
             <div className="text-2xl font-bold">{totalRubricas + 17}</div>
-            <div className="text-xs text-slate-300">Total rúbricas</div>
+            <div className="text-xs text-slate-300">Total rúbricas (840 + 17 maestras)</div>
           </div>
           <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
             <div className="text-2xl font-bold">{totalUDs}</div>
@@ -133,7 +134,7 @@ function SectionInicio() {
             <div className="text-xs text-slate-300">Cursos (EE)</div>
           </div>
           <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
-            <div className="text-2xl font-bold">252</div>
+            <div className="text-2xl font-bold">{totalRubricas}</div>
             <div className="text-xs text-slate-300">Rúbricas específicas</div>
           </div>
         </div>
@@ -192,6 +193,20 @@ function SectionInicio() {
         <h4 className="font-semibold text-purple-700 mb-3 text-sm">ENSEÑANZAS PROFESIONALES</h4>
         <div className="grid md:grid-cols-3 gap-4">
           {bloquesEP.map(b => (
+            <div key={b.id} className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-lg p-4 border border-purple-100">
+              <h4 className="font-bold text-purple-800">{b.nombre}</h4>
+              <p className="text-xs text-gray-600 mt-1">{b.uds.length} UD × 14 rúbricas = {b.uds.length * 14} rúbricas</p>
+              <div className="mt-2 space-y-1">
+                {b.uds.map(ud => (
+                  <div key={ud.id} className="text-xs text-gray-600 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full shrink-0"></span>
+                    <span>{ud.id}: {ud.titulo}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          {bloquesEP456.map(b => (
             <div key={b.id} className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-lg p-4 border border-purple-100">
               <h4 className="font-bold text-purple-800">{b.nombre}</h4>
               <p className="text-xs text-gray-600 mt-1">{b.uds.length} UD × 14 rúbricas = {b.uds.length * 14} rúbricas</p>
@@ -433,11 +448,12 @@ function SectionRubricasEE() {
 }
 
 function SectionRubricasEP() {
+  const allEPBloques = [...bloquesEP, ...bloquesEP456];
   return (
     <RubricasSection
-      bloquesData={bloquesEP}
+      bloquesData={allEPBloques}
       titulo="C.2. Rúbricas EP específicas por UD — Desarrollo completo"
-      descripcion="Enseñanzas Profesionales. Cada rúbrica incluye nombre, objetivo, indicadores observables, niveles de desempeño con descriptores detallados, ponderación y ejemplo de aplicación."
+      descripcion="Enseñanzas Profesionales (EP1-EP6). Cada rúbrica incluye nombre, objetivo, indicadores observables, niveles de desempeño con descriptores detallados, ponderación y ejemplo de aplicación."
       color="from-purple-50 to-slate-50 border-purple-200"
     />
   );
