@@ -11,10 +11,22 @@ import {
 import { bloquesEP } from './data/rubricsEP';
 import { bloquesEP456 } from './data/rubricsEP456';
 import { exportToExcel, exportToPDF, exportUDToExcel, exportUDToPDF } from './utils/exportUtils';
+import { 
+  normativa, 
+  objetivosEE, 
+  objetivosEP, 
+  criteriosEE, 
+  criteriosEP, 
+  metodologia, 
+  evaluacionInfo, 
+  contenidosEE, 
+  contenidosEP,
+  repertorioOrientativo 
+} from './data/programacion';
 
 const bloques = [...bloquesEE, ...bloquesEP, ...bloquesEP456];
 
-type Section = 'inicio' | 'buscar' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep';
+type Section = 'inicio' | 'buscar' | 'programacion' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep';
 
 function NivelBadge({ nivel }: { nivel: string }) {
   const colors: Record<string, string> = {
@@ -485,6 +497,473 @@ function SectionInicio() {
   );
 }
 
+function SectionProgramacion() {
+  const [activeTab, setActiveTab] = useState<'normativa' | 'objetivos' | 'criterios' | 'contenidos' | 'metodologia' | 'evaluacion' | 'repertorio'>('normativa');
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-5xl">📚</span>
+          <div>
+            <h2 className="text-3xl font-bold">Programación Didáctica</h2>
+            <p className="text-indigo-100 text-sm mt-1">Marco Referencial Completo — Clarinete 2026/2027</p>
+          </div>
+        </div>
+        <p className="text-indigo-50 text-sm leading-relaxed max-w-3xl">
+          Documento integral que recoge toda la programación didáctica de Clarinete para Enseñanzas Elementales y Profesionales, 
+          incluyendo normativa, objetivos, criterios de evaluación, contenidos, metodología, evaluación y repertorio.
+        </p>
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl font-bold">{normativa.length}</div>
+            <div className="text-xs text-indigo-100">Normativas</div>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl font-bold">{objetivosEE.length + objetivosEP.length}</div>
+            <div className="text-xs text-indigo-100">Objetivos</div>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl font-bold">{criteriosEE.length + criteriosEP.length}</div>
+            <div className="text-xs text-indigo-100">Criterios</div>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl font-bold">{repertorioOrientativo.length}+</div>
+            <div className="text-xs text-indigo-100">Obras</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="flex overflow-x-auto border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('normativa')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'normativa'
+                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            📜 Normativa
+          </button>
+          <button
+            onClick={() => setActiveTab('objetivos')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'objetivos'
+                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            🎯 Objetivos
+          </button>
+          <button
+            onClick={() => setActiveTab('criterios')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'criterios'
+                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            ✅ Criterios
+          </button>
+          <button
+            onClick={() => setActiveTab('contenidos')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'contenidos'
+                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            📖 Contenidos
+          </button>
+          <button
+            onClick={() => setActiveTab('metodologia')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'metodologia'
+                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            🎓 Metodología
+          </button>
+          <button
+            onClick={() => setActiveTab('evaluacion')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'evaluacion'
+                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            📊 Evaluación
+          </button>
+          <button
+            onClick={() => setActiveTab('repertorio')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'repertorio'
+                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            🎼 Repertorio
+          </button>
+        </div>
+
+        <div className="p-6">
+          {/* Normativa */}
+          {activeTab === 'normativa' && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Marco Normativo</h3>
+              <div className="space-y-3">
+                {normativa.map(norma => (
+                  <div key={norma.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="font-mono text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                            {norma.id}
+                          </span>
+                          <span className={`text-xs px-2 py-0.5 rounded ${
+                            norma.estado === 'vigente' 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-amber-100 text-amber-800'
+                          }`}>
+                            {norma.estado === 'vigente' ? '✓ Vigente' : '⏳ HOLD'}
+                          </span>
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                            {norma.ambito}
+                          </span>
+                        </div>
+                        <h4 className="font-bold text-slate-800 text-sm mb-1">{norma.titulo}</h4>
+                        <p className="text-xs text-gray-600">{norma.descripcion}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Objetivos */}
+          {activeTab === 'objetivos' && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <span className="text-xl">🎯</span> Objetivos Generales
+                </h3>
+                
+                {/* EE */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-indigo-700 mb-3 text-sm">ENSEÑANZAS ELEMENTALES</h4>
+                  <div className="space-y-2">
+                    {objetivosEE.map(obj => (
+                      <div key={obj.id} className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+                        <div className="flex items-start gap-3">
+                          <span className="shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            {obj.numero}
+                          </span>
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-800">{obj.texto}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* EP */}
+                <div>
+                  <h4 className="font-semibold text-purple-700 mb-3 text-sm">ENSEÑANZAS PROFESIONALES</h4>
+                  <div className="space-y-2">
+                    {objetivosEP.map(obj => (
+                      <div key={obj.id} className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                        <div className="flex items-start gap-3">
+                          <span className="shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            {obj.numero}
+                          </span>
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-800">{obj.texto}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Criterios */}
+          {activeTab === 'criterios' && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Criterios de Evaluación</h3>
+              
+              {/* EE */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-indigo-700 mb-3 text-sm">ENSEÑANZAS ELEMENTALES</h4>
+                <div className="space-y-2">
+                  {criteriosEE.map(crit => (
+                    <div key={crit.id} className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded">
+                          {crit.codigo}
+                        </span>
+                        <p className="text-sm text-gray-800 flex-1">{crit.texto}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* EP */}
+              <div>
+                <h4 className="font-semibold text-purple-700 mb-3 text-sm">ENSEÑANZAS PROFESIONALES</h4>
+                <div className="space-y-2">
+                  {criteriosEP.map(crit => (
+                    <div key={crit.id} className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs font-bold text-purple-700 bg-purple-100 px-3 py-1 rounded">
+                          {crit.codigo}
+                        </span>
+                        <p className="text-sm text-gray-800 flex-1">{crit.texto}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Contenidos */}
+          {activeTab === 'contenidos' && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Contenidos por Curso</h3>
+              
+              {/* EE */}
+              <div className="mb-8">
+                <h4 className="font-semibold text-indigo-700 mb-4 text-sm">ENSEÑANZAS ELEMENTALES</h4>
+                <div className="space-y-4">
+                  {contenidosEE.map(curso => (
+                    <div key={curso.curso} className="bg-white rounded-lg border border-indigo-200 overflow-hidden">
+                      <div className="bg-indigo-600 text-white px-4 py-2">
+                        <h5 className="font-bold">Curso {curso.curso}º</h5>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {curso.bloques.map((bloque, idx) => (
+                          <div key={idx} className="bg-indigo-50 rounded-lg p-3">
+                            <h6 className="font-semibold text-indigo-800 text-sm mb-2">{bloque.titulo}</h6>
+                            <ul className="space-y-1">
+                              {bloque.contenidos.map((contenido, cIdx) => (
+                                <li key={cIdx} className="text-xs text-gray-700 flex items-start gap-2">
+                                  <span className="text-indigo-500 mt-0.5">•</span>
+                                  <span>{contenido}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* EP */}
+              <div>
+                <h4 className="font-semibold text-purple-700 mb-4 text-sm">ENSEÑANZAS PROFESIONALES</h4>
+                <div className="space-y-4">
+                  {contenidosEP.map(curso => (
+                    <div key={curso.curso} className="bg-white rounded-lg border border-purple-200 overflow-hidden">
+                      <div className="bg-purple-600 text-white px-4 py-2">
+                        <h5 className="font-bold">Curso {curso.curso}º</h5>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {curso.bloques.map((bloque, idx) => (
+                          <div key={idx} className="bg-purple-50 rounded-lg p-3">
+                            <h6 className="font-semibold text-purple-800 text-sm mb-2">{bloque.titulo}</h6>
+                            <ul className="space-y-1">
+                              {bloque.contenidos.map((contenido, cIdx) => (
+                                <li key={cIdx} className="text-xs text-gray-700 flex items-start gap-2">
+                                  <span className="text-purple-500 mt-0.5">•</span>
+                                  <span>{contenido}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Metodología */}
+          {activeTab === 'metodologia' && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Metodología Didáctica</h3>
+              
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 border border-indigo-200">
+                <p className="text-sm text-gray-700 leading-relaxed mb-4">{metodologia.descripcion}</p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-bold text-indigo-800 mb-3 text-sm">Principios Metodológicos</h4>
+                    <ul className="space-y-2">
+                      {metodologia.principios.map((principio, idx) => (
+                        <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
+                          <span className="text-indigo-600 font-bold mt-0.5">{idx + 1}.</span>
+                          <span>{principio}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-bold text-purple-800 mb-3 text-sm">Estrategias Didácticas</h4>
+                    <ul className="space-y-2">
+                      {metodologia.estrategias.map((estrategia, idx) => (
+                        <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
+                          <span className="text-purple-600 font-bold mt-0.5">{idx + 1}.</span>
+                          <span>{estrategia}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Evaluación */}
+          {activeTab === 'evaluacion' && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Sistema de Evaluación</h3>
+              
+              <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-lg p-6 border border-green-200">
+                <p className="text-sm text-gray-700 leading-relaxed mb-6">{evaluacionInfo.descripcion}</p>
+                
+                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <h4 className="font-bold text-green-800 mb-3 text-sm">Instrumentos de Evaluación</h4>
+                    <ul className="space-y-2">
+                      {evaluacionInfo.instrumentos.map((instrumento, idx) => (
+                        <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
+                          <span className="text-green-600 mt-0.5">✓</span>
+                          <span>{instrumento}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-bold text-teal-800 mb-3 text-sm">Criterios de Evaluación</h4>
+                    <ul className="space-y-2">
+                      {evaluacionInfo.criterios.map((criterio, idx) => (
+                        <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
+                          <span className="text-teal-600 mt-0.5">✓</span>
+                          <span>{criterio}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <p className="text-xs text-amber-800">
+                    <strong>⚠️ Calificación:</strong> {evaluacionInfo.calificacion}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Repertorio */}
+          {activeTab === 'repertorio' && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Repertorio Orientativo</h3>
+              
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                <p className="text-xs text-amber-800">
+                  <strong>⚠️ Nota:</strong> Este repertorio es orientativo. La selección final de obras dependerá del nivel y progreso de cada alumno.
+                </p>
+              </div>
+
+              {/* EE */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-indigo-700 mb-3 text-sm">ENSEÑANZAS ELEMENTALES</h4>
+                <div className="space-y-2">
+                  {repertorioOrientativo.filter(r => r.etapa === 'EE').map(rep => (
+                    <div key={rep.id} className="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="font-mono text-xs text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded">
+                          {rep.id}
+                        </span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                          {rep.curso}º Curso
+                        </span>
+                        <span className={`text-xs px-2 py-0.5 rounded ${
+                          rep.tipo === 'estudio' ? 'bg-purple-100 text-purple-800' :
+                          rep.tipo === 'obra' ? 'bg-pink-100 text-pink-800' :
+                          'bg-teal-100 text-teal-800'
+                        }`}>
+                          {rep.tipo}
+                        </span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                          {rep.categoria}
+                        </span>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-sm font-semibold text-gray-800">{rep.compositor}</p>
+                        <p className="text-xs text-gray-600">{rep.obra}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* EP */}
+              <div>
+                <h4 className="font-semibold text-purple-700 mb-3 text-sm">ENSEÑANZAS PROFESIONALES</h4>
+                <div className="space-y-2">
+                  {repertorioOrientativo.filter(r => r.etapa === 'EP').map(rep => (
+                    <div key={rep.id} className="bg-purple-50 rounded-lg p-3 border border-purple-200">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="font-mono text-xs text-purple-700 bg-purple-100 px-2 py-0.5 rounded">
+                          {rep.id}
+                        </span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                          {rep.curso}º Curso
+                        </span>
+                        <span className={`text-xs px-2 py-0.5 rounded ${
+                          rep.tipo === 'estudio' ? 'bg-purple-100 text-purple-800' :
+                          rep.tipo === 'obra' ? 'bg-pink-100 text-pink-800' :
+                          'bg-teal-100 text-teal-800'
+                        }`}>
+                          {rep.tipo}
+                        </span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                          {rep.categoria}
+                        </span>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-sm font-semibold text-gray-800">{rep.compositor}</p>
+                        <p className="text-xs text-gray-600">{rep.obra}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SectionMarco() {
   return (
     <div className="space-y-8">
@@ -873,6 +1352,7 @@ export default function App() {
   const navItems: { id: Section; label: string; icon: string }[] = [
     { id: 'inicio', label: 'Inicio', icon: '🏠' },
     { id: 'buscar', label: '🔍 Buscador Global', icon: '🔍' },
+    { id: 'programacion', label: '📚 Programación Didáctica', icon: '📚' },
     { id: 'marco', label: 'A. Marco General', icon: '📐' },
     { id: 'maestras-ep', label: 'B.1. Rúbricas Maestras EP', icon: '🎓' },
     { id: 'maestras-ee', label: 'B.2. Rúbricas Maestras EE', icon: '🎼' },
@@ -952,6 +1432,7 @@ export default function App() {
           {/* Section content */}
           {section === 'inicio' && <SectionInicio />}
           {section === 'buscar' && <GlobalSearch />}
+          {section === 'programacion' && <SectionProgramacion />}
           {section === 'marco' && <SectionMarco />}
           {section === 'maestras-ep' && <SectionMaestrasEP />}
           {section === 'maestras-ee' && <SectionMaestrasEE />}
