@@ -83,8 +83,8 @@ export const exportToExcel = (tipo: 'ee' | 'ep' | 'maestras-ep' | 'maestras-ee' 
   }
 
   const fileName = tipo === 'todas' 
-    ? 'Rubricas_Clarinete_Completo_2026-2027.xlsx'
-    : `Rubricas_${tipo.toUpperCase()}_2026-2027.xlsx`;
+    ? 'RUBREX_Rubricas_Clarinete_Completo_2026-2027.xlsx'
+    : `RUBREX_Rubricas_${tipo.toUpperCase()}_2026-2027.xlsx`;
   
   XLSX.writeFile(wb, fileName);
 };
@@ -193,8 +193,8 @@ export const exportToPDF = (tipo: 'ee' | 'ep' | 'maestras-ep' | 'maestras-ee' | 
   }
 
   const fileName = tipo === 'todas'
-    ? 'Rubricas_Clarinete_Completo_2026-2027.pdf'
-    : `Rubricas_${tipo.toUpperCase()}_2026-2027.pdf`;
+    ? 'RUBREX_Rubricas_Clarinete_Completo_2026-2027.pdf'
+    : `RUBREX_Rubricas_${tipo.toUpperCase()}_2026-2027.pdf`;
 
   doc.save(fileName);
 };
@@ -225,7 +225,7 @@ export const exportUDToExcel = (bloqueId: string, udId: string) => {
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, ud.id);
-  XLSX.writeFile(wb, `${ud.id}_Rubricas.xlsx`);
+  XLSX.writeFile(wb, `RUBREX_${ud.id}_Rubricas.xlsx`);
 };
 
 export const exportUDToPDF = (bloqueId: string, udId: string) => {
@@ -269,5 +269,5 @@ export const exportUDToPDF = (bloqueId: string, udId: string) => {
     styles: { fontSize: 7, cellPadding: 1.5 }
   });
 
-  doc.save(`${ud.id}_Rubricas.pdf`);
+  doc.save(`RUBREX_${ud.id}_Rubricas.pdf`);
 };

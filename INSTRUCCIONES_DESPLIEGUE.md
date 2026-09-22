@@ -1,4 +1,4 @@
-# Instrucciones de Despliegue en GitHub y Vercel
+# RUBREX — Instrucciones de Despliegue en GitHub y Vercel
 
 ## 📤 Paso 1: Subir el código a GitHub
 
@@ -6,8 +6,8 @@
 
 1. Ve a [GitHub](https://github.com)
 2. Haz clic en "New repository"
-3. Nombre del repositorio: `rubricas-clarinete`
-4. Descripción: "Rúbricas de evaluación para Programación Didáctica de Clarinete 2026/2027"
+3. Nombre del repositorio: `rubrex`
+4. Descripción: "RUBREX — Rúbricas de evaluación para Programación Didáctica de Clarinete 2026/2027"
 5. Marca "Public" (o "Private" si prefieres)
 6. **NO** marques "Initialize this repository with a README"
 7. Haz clic en "Create repository"
@@ -24,10 +24,10 @@ git init
 git add .
 
 # Hacer el primer commit
-git commit -m "Initial commit: Rúbricas Clarinete 2026/2027"
+git commit -m "Initial commit: RUBREX - Rúbricas Clarinete 2026/2027"
 
 # Agregar el repositorio remoto (reemplaza TU-USUARIO con tu nombre de usuario de GitHub)
-git remote add origin https://github.com/TU-USUARIO/rubricas-clarinete.git
+git remote add origin https://github.com/TU-USUARIO/rubrex.git
 
 # Cambiar la rama principal a main
 git branch -M main
@@ -43,7 +43,7 @@ git push -u origin main
 1. Ve a [Vercel](https://vercel.com)
 2. Inicia sesión con tu cuenta de GitHub
 3. Haz clic en "Add New Project"
-4. Busca tu repositorio `rubricas-clarinete`
+4. Busca tu repositorio `rubrex`
 5. Haz clic en "Import"
 6. Vercel detectará automáticamente que es un proyecto Vite
 7. Revisa la configuración:
@@ -91,10 +91,10 @@ Si quieres usar un dominio propio:
 
 ## 📊 Estructura de archivos para GitHub
 
-Asegúrate de que tu repositorio tenga esta estructura:
+Asegúrate de que tu repositorio `rubrex` tenga esta estructura:
 
 ```
-rubricas-clarinete/
+rubrex/
 ├── .gitignore
 ├── README.md
 ├── vercel.json
@@ -147,8 +147,8 @@ Si tu aplicación necesita variables de entorno:
 
 - Documentación de Vercel: https://vercel.com/docs
 - Documentación de GitHub: https://docs.github.com
-- Issues del proyecto: https://github.com/TU-USUARIO/rubricas-clarinete/issues
+- Issues del proyecto: https://github.com/TU-USUARIO/rubrex/issues
 
 ---
 
-**¡Felicidades!** Tu aplicación de rúbricas está ahora disponible en internet. 🎉
+**¡Felicidades!** **RUBREX** está ahora disponible en internet. 🎉

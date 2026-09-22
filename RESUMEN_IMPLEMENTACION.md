@@ -1,8 +1,10 @@
-# Resumen de Implementación — Rúbricas de Clarinete 2026/2027
+# Resumen de Implementación — RUBREX: Rúbricas de Clarinete 2026/2027
+
+**Nombre de la herramienta: RUBREX**
 
 ## Estado del Proyecto: ✅ COMPLETADO
 
-La aplicación web ha sido desarrollada exitosamente con todas las rúbricas del documento maestro.
+La aplicación web RUBREX ha sido desarrollada exitosamente con todas las rúbricas del documento maestro.
 
 ---
 
@@ -178,10 +180,11 @@ Si se desea completar el documento maestro al 100% (840 rúbricas):
 
 ✅ **DESARROLLO PROPIO COMPLETADO**
 
-Todas las rúbricas implementadas son desarrollo pedagógico propio [DP], coherentes con los criterios oficiales [CO] pero no literales del texto normativo, tal como especifica el documento maestro.
+Todas las rúbricas implementadas en RUBREX son desarrollo pedagógico propio [DP], coherentes con los criterios oficiales [CO] pero no literales del texto normativo, tal como especifica el documento maestro.
 
 ---
 
+**Nombre de la herramienta**: RUBREX
 **Fecha de implementación**: 2026
 **Versión**: v3.0
 **Estado**: ✅ Funcional y completo para EE1-EE3 y EP1-EP6

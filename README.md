@@ -1,6 +1,6 @@
-# Rúbricas de Clarinete 2026/2027
+# RUBREX — Rúbricas de Clarinete 2026/2027
 
-Aplicación web para la visualización y descarga de rúbricas de evaluación para la Programación Didáctica de Clarinete en Enseñanzas Elementales y Enseñanzas Profesionales de Música en Extremadura.
+**RUBREX** es la aplicación web para la visualización y descarga de rúbricas de evaluación para la Programación Didáctica de Clarinete en Enseñanzas Elementales y Enseñanzas Profesionales de Música en Extremadura.
 
 ## 📋 Características
 
@@ -54,7 +54,7 @@ Aplicación web para la visualización y descarga de rúbricas de evaluación pa
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/rubricas-clarinete.git
+git clone https://github.com/tu-usuario/rubrex.git
 
 # Instalar dependencias
 npm install
@@ -88,16 +88,17 @@ vercel
 ## 📁 Estructura del Proyecto
 
 ```
-src/
-├── data/
-│   ├── rubrics.ts          # EE1-EE3 + Rúbricas maestras
-│   ├── rubricsEP.ts        # EP1-EP3
-│   └── rubricsEP456.ts     # EP4-EP6
-├── utils/
-│   └── exportUtils.ts      # Funciones de exportación
-├── App.tsx                 # Componente principal
-├── main.tsx               # Punto de entrada
-└── index.css              # Estilos globales
+rubrex/
+├── src/
+│   ├── data/
+│   │   ├── rubrics.ts          # EE1-EE3 + Rúbricas maestras
+│   │   ├── rubricsEP.ts        # EP1-EP3
+│   │   └── rubricsEP456.ts     # EP4-EP6
+│   ├── utils/
+│   │   └── exportUtils.ts      # Funciones de exportación
+│   ├── App.tsx                 # Componente principal
+│   ├── main.tsx               # Punto de entrada
+│   └── index.css              # Estilos globales
 ```
 
 ## 📊 Tipos de Rúbrica
@@ -121,16 +122,17 @@ Este proyecto es desarrollo pedagógico propio [DP], coherente con los criterios
 
 ## 👨‍🏫 Autor
 
-Programación Didáctica de Clarinete 2026/2027
+RUBREX — Programación Didáctica de Clarinete 2026/2027
 Enseñanzas Elementales y Profesionales de Música
 Extremadura, España
 
 ## 📞 Contacto
 
-Para consultas o sugerencias, abre un issue en GitHub.
+Para consultas o sugerencias sobre RUBREX, abre un issue en GitHub.
 
 ---
 
 **Estado**: ✅ Funcional y completo para EE1-EE3 y EP1-EP6
 **Versión**: 3.0
 **Última actualización**: 2026
+**Nombre de la herramienta**: RUBREX

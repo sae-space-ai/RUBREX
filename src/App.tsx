@@ -113,8 +113,8 @@ function SectionInicio() {
         <div className="flex items-center gap-3 mb-4">
           <span className="text-4xl">🎵</span>
           <div>
-            <h2 className="text-2xl font-bold">Desarrollo Integral de Rúbricas</h2>
-            <p className="text-slate-300 text-sm">Programación Didáctica de Clarinete</p>
+            <h2 className="text-2xl font-bold">RUBREX</h2>
+            <p className="text-slate-300 text-sm">Desarrollo Integral de Rúbricas — Programación Didáctica de Clarinete</p>
           </div>
         </div>
         <p className="text-slate-200 text-sm leading-relaxed max-w-3xl">
@@ -649,9 +649,9 @@ export default function App() {
           <div className="flex items-center gap-3">
             <span className="text-3xl">🎵</span>
             <div>
-              <h1 className="font-bold text-sm leading-tight">Rúbricas de Clarinete</h1>
-              <p className="text-xs text-slate-400">Programación Didáctica</p>
-              <p className="text-xs text-slate-500">Curso 2026/2027</p>
+              <h1 className="font-bold text-lg leading-tight">RUBREX</h1>
+              <p className="text-xs text-slate-400">Rúbricas de Clarinete</p>
+              <p className="text-xs text-slate-500">Programación Didáctica 2026/2027</p>
             </div>
           </div>
         </div>
@@ -689,7 +689,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto p-4 md:p-8 pt-16 md:pt-8">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-xs text-gray-500 mb-6">
-            <span>🎵 Rúbricas</span>
+            <span>🎵 RUBREX</span>
             <span>/</span>
             <span className="text-indigo-600 font-medium">
               {navItems.find(n => n.id === section)?.label}
@@ -706,7 +706,8 @@ export default function App() {
 
           {/* Footer */}
           <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-xs text-gray-400">
-            <p>Desarrollo Integral de Rúbricas — Programación Didáctica de Clarinete — Curso 2026/2027</p>
+            <p className="font-semibold">RUBREX — Desarrollo Integral de Rúbricas</p>
+            <p className="mt-1">Programación Didáctica de Clarinete — Curso 2026/2027</p>
             <p className="mt-1">EE y EP · Documento Maestro v1.0 · Cada rúbrica con objetivo, indicadores, descriptores y ejemplo</p>
           </footer>
         </div>

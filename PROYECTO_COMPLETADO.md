@@ -1,4 +1,6 @@
-# ✅ PROYECTO COMPLETADO - Rúbricas de Clarinete 2026/2027
+# ✅ PROYECTO COMPLETADO - RUBREX: Rúbricas de Clarinete 2026/2027
+
+**Nombre de la herramienta: RUBREX**
 
 ## 📊 Resumen Final
 
@@ -43,7 +45,7 @@
 ### Estructura de Archivos
 
 ```
-rubricas-clarinete/
+rubrex/
 ├── .gitignore                          ✅ Configurado
 ├── README.md                           ✅ Creado
 ├── INSTRUCCIONES_DESPLIEGUE.md         ✅ Creado
@@ -90,8 +92,8 @@ Abre tu navegador en `http://localhost:5173`
 ```bash
 git init
 git add .
-git commit -m "Initial commit: Rúbricas Clarinete 2026/2027"
-git remote add origin https://github.com/TU-USUARIO/rubricas-clarinete.git
+git commit -m "Initial commit: RUBREX - Rúbricas Clarinete 2026/2027"
+git remote add origin https://github.com/TU-USUARIO/rubrex.git
 git branch -M main
 git push -u origin main
 ```
@@ -145,6 +147,7 @@ Si encuentras algún problema:
 
 ---
 
+**Nombre de la herramienta**: RUBREX
 **Fecha**: 2026
 **Versión**: 3.0 (Final)
 **Estado**: ✅ Completado
