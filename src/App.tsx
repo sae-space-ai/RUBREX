@@ -53,84 +53,7 @@ function TipoBadge({ tipo }: { tipo: string }) {
   );
 }
 
-function RubricaDetailCard({ rubrica }: { rubrica: RubricaDesarrollada }) {
-  const [expanded, setExpanded] = useState(false);
 
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all">
-      {/* Header */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors"
-      >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="font-mono text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{rubrica.codigo}</span>
-            <TipoBadge tipo={rubrica.tipo} />
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{rubrica.criterio}</span>
-            <span className="text-xs text-gray-400">· {rubrica.ponderacion}</span>
-          </div>
-          <h4 className="font-bold text-slate-800 text-sm">{rubrica.nombre}</h4>
-        </div>
-        <svg className={`w-5 h-5 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-
-      {/* Expanded content */}
-      {expanded && (
-        <div className="px-5 pb-5 border-t border-gray-100 pt-4 space-y-4">
-          {/* Objetivo */}
-          <div>
-            <h5 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Objetivo</h5>
-            <p className="text-sm text-gray-700">{rubrica.objetivo}</p>
-          </div>
-
-          {/* Indicadores */}
-          <div>
-            <h5 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Indicadores observables</h5>
-            <div className="flex flex-wrap gap-1.5">
-              {rubrica.indicadores.map((ind, i) => (
-                <span key={i} className="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded-md border border-indigo-100">
-                  {ind}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Ejemplo */}
-          <div>
-            <h5 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Ejemplo de aplicación</h5>
-            <p className="text-sm text-gray-600 italic bg-gray-50 p-2 rounded-lg">{rubrica.ejemplo}</p>
-          </div>
-
-          {/* Niveles */}
-          <div>
-            <h5 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Niveles de desempeño</h5>
-            <div className="space-y-2">
-              <div className="flex gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-100">
-                <span className="shrink-0 font-bold text-emerald-700 text-xs mt-0.5">L4</span>
-                <p className="text-xs text-emerald-900 leading-relaxed">{rubrica.L4}</p>
-              </div>
-              <div className="flex gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                <span className="shrink-0 font-bold text-blue-700 text-xs mt-0.5">L3</span>
-                <p className="text-xs text-blue-900 leading-relaxed">{rubrica.L3}</p>
-              </div>
-              <div className="flex gap-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
-                <span className="shrink-0 font-bold text-amber-700 text-xs mt-0.5">L2</span>
-                <p className="text-xs text-amber-900 leading-relaxed">{rubrica.L2}</p>
-              </div>
-              <div className="flex gap-3 p-3 bg-red-50 rounded-lg border border-red-100">
-                <span className="shrink-0 font-bold text-red-700 text-xs mt-0.5">L1</span>
-                <p className="text-xs text-red-900 leading-relaxed">{rubrica.L1}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function MaestraRubricCard({ rubric }: { rubric: MaestraRubric }) {
   const [expanded, setExpanded] = useState(false);
@@ -193,8 +116,8 @@ function SectionInicio() {
         </p>
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
-            <div className="text-2xl font-bold">{totalRubricas}</div>
-            <div className="text-xs text-slate-300">Rúbricas desarrolladas</div>
+            <div className="text-2xl font-bold">{totalRubricas + 17}</div>
+            <div className="text-xs text-slate-300">Total rúbricas</div>
           </div>
           <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
             <div className="text-2xl font-bold">{totalUDs}</div>
@@ -205,8 +128,8 @@ function SectionInicio() {
             <div className="text-xs text-slate-300">Cursos (EE)</div>
           </div>
           <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
-            <div className="text-2xl font-bold">17</div>
-            <div className="text-xs text-slate-300">Rúbricas maestras</div>
+            <div className="text-2xl font-bold">252</div>
+            <div className="text-xs text-slate-300">Rúbricas específicas</div>
           </div>
         </div>
       </div>
@@ -382,8 +305,6 @@ function SectionRubricas() {
   const [selectedBloque, setSelectedBloque] = useState(bloques[0].id);
   const [selectedUD, setSelectedUD] = useState(bloques[0].uds[0].id);
   const [filterTipo, setFilterTipo] = useState<string>('');
-  const [expandAll, setExpandAll] = useState(false);
-
   const bloque = bloques.find(b => b.id === selectedBloque)!;
   const ud = bloque.uds.find(u => u.id === selectedUD)!;
 
@@ -470,20 +391,15 @@ function SectionRubricas() {
       {/* Rubric Cards */}
       <div className="space-y-3">
         {filteredRubricas.map(r => (
-          <RubricaExpandible key={r.codigo} rubrica={r} forceExpand={expandAll} />
+          <RubricaExpandible key={r.codigo} rubrica={r} />
         ))}
       </div>
     </div>
   );
 }
 
-function RubricaExpandible({ rubrica, forceExpand }: { rubrica: RubricaDesarrollada; forceExpand: boolean }) {
-  const [expanded, setExpanded] = useState(forceExpand);
-
-  // Sync with forceExpand
-  useState(() => {
-    setExpanded(forceExpand);
-  });
+function RubricaExpandible({ rubrica }: { rubrica: RubricaDesarrollada }) {
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all">
