@@ -14,7 +14,7 @@ import { exportToExcel, exportToPDF, exportUDToExcel, exportUDToPDF } from './ut
 
 const bloques = [...bloquesEE, ...bloquesEP, ...bloquesEP456];
 
-type Section = 'inicio' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep';
+type Section = 'inicio' | 'buscar' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep';
 
 function NivelBadge({ nivel }: { nivel: string }) {
   const colors: Record<string, string> = {
@@ -97,6 +97,226 @@ function MaestraRubricCard({ rubric }: { rubric: MaestraRubric }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ============================================
+// RUBREX - Buscador Global de Rúbricas
+// ============================================
+
+function GlobalSearch() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Array<{
+    rubric: RubricaDesarrollada;
+    bloque: string;
+    ud: string;
+    udTitulo: string;
+  }>>([]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    
+    if (term.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    const results: Array<{
+      rubric: RubricaDesarrollada;
+      bloque: string;
+      ud: string;
+      udTitulo: string;
+    }> = [];
+
+    const lowerTerm = term.toLowerCase();
+
+    bloques.forEach(bloque => {
+      bloque.uds.forEach(ud => {
+        ud.rubricas.forEach(rubric => {
+          const searchableText = [
+            rubric.codigo,
+            rubric.nombre,
+            rubric.objetivo,
+            rubric.tipo,
+            rubric.criterio,
+            rubric.ponderacion,
+            rubric.ejemplo,
+            rubric.L4,
+            rubric.L3,
+            rubric.L2,
+            rubric.L1,
+            ...rubric.indicadores
+          ].join(' ').toLowerCase();
+
+          if (searchableText.includes(lowerTerm)) {
+            results.push({
+              rubric,
+              bloque: bloque.nombre,
+              ud: ud.id,
+              udTitulo: ud.titulo
+            });
+          }
+        });
+      });
+    });
+
+    setSearchResults(results);
+  };
+
+  const highlightText = (text: string, term: string) => {
+    if (!term) return text;
+    const regex = new RegExp(`(${term})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, i) => 
+      regex.test(part) ? 
+        <mark key={i} className="bg-yellow-200 px-0.5 rounded">{part}</mark> : 
+        part
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-5 border border-indigo-200">
+        <h2 className="text-xl font-bold text-indigo-900 mb-2">🔍 Buscador Global de Rúbricas</h2>
+        <p className="text-sm text-indigo-700">
+          Busca en todas las rúbricas por código, nombre, criterio, indicador o cualquier palabra clave.
+        </p>
+      </div>
+
+      {/* Campo de búsqueda */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+            placeholder="Buscar por código, nombre, criterio, indicador..."
+            className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            autoFocus
+          />
+          <svg className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        
+        {searchTerm.length >= 2 && (
+          <p className="mt-3 text-sm text-gray-600">
+            {searchResults.length === 0 ? (
+              'No se encontraron resultados'
+            ) : (
+              <>Se encontraron <strong>{searchResults.length}</strong> rúbrica{searchResults.length !== 1 ? 's' : ''}</>
+            )}
+          </p>
+        )}
+      </div>
+
+      {/* Resultados */}
+      {searchResults.length > 0 && (
+        <div className="space-y-3">
+          {searchResults.slice(0, 50).map((result, index) => (
+            <div key={index} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <span className="font-mono text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                      {result.rubric.codigo}
+                    </span>
+                    <TipoBadge tipo={result.rubric.tipo} />
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                      {result.rubric.criterio}
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-slate-800 text-sm">
+                    {highlightText(result.rubric.nombre, searchTerm)}
+                  </h4>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {result.bloque} → {result.ud}: {result.udTitulo}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="mt-3 space-y-2">
+                <div>
+                  <span className="text-xs font-semibold text-gray-600">Objetivo: </span>
+                  <span className="text-xs text-gray-700">
+                    {highlightText(result.rubric.objetivo.substring(0, 150) + '...', searchTerm)}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-xs font-semibold text-gray-600">Indicadores: </span>
+                  <span className="text-xs text-gray-700">
+                    {result.rubric.indicadores.map((ind, i) => (
+                      <span key={i} className="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs mr-1 mb-1">
+                        {highlightText(ind, searchTerm)}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {searchResults.length > 50 && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
+              <p className="text-sm text-amber-800">
+                Mostrando los primeros 50 resultados de {searchResults.length} encontrados.
+                <br />
+                <span className="text-xs">Refina tu búsqueda para resultados más específicos.</span>
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================
+// RUBREX - Vista de Tabla Compacta
+// ============================================
+
+function RubricasTableView({ rubricas }: { rubricas: RubricaDesarrollada[] }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+        <thead className="bg-gradient-to-r from-slate-700 to-slate-800 text-white">
+          <tr>
+            <th className="px-3 py-2 text-left text-xs font-semibold">Código</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">Nombre</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">Tipo</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">Criterio</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">Pond.</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">L4</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">L3</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">L2</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold">L1</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rubricas.map((r, index) => (
+            <tr key={r.codigo} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+              <td className="px-3 py-2 text-xs font-mono text-slate-600 whitespace-nowrap">{r.codigo}</td>
+              <td className="px-3 py-2 text-xs font-medium text-slate-800">{r.nombre}</td>
+              <td className="px-3 py-2"><TipoBadge tipo={r.tipo} /></td>
+              <td className="px-3 py-2 text-xs text-gray-600">{r.criterio}</td>
+              <td className="px-3 py-2 text-xs text-gray-600">{r.ponderacion}</td>
+              <td className="px-3 py-2 text-xs text-emerald-700 max-w-xs truncate" title={r.L4}>
+                {r.L4.substring(0, 60)}...
+              </td>
+              <td className="px-3 py-2 text-xs text-blue-700 max-w-xs truncate" title={r.L3}>
+                {r.L3.substring(0, 60)}...
+              </td>
+              <td className="px-3 py-2 text-xs text-amber-700 max-w-xs truncate" title={r.L2}>
+                {r.L2.substring(0, 60)}...
+              </td>
+              <td className="px-3 py-2 text-xs text-red-700 max-w-xs truncate" title={r.L1}>
+                {r.L1.substring(0, 60)}...
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -384,6 +604,7 @@ function RubricasSection({ bloquesData, titulo, descripcion, color }: { bloquesD
   const [selectedBloque, setSelectedBloque] = useState(bloquesData[0].id);
   const [selectedUD, setSelectedUD] = useState(bloquesData[0].uds[0].id);
   const [filterTipo, setFilterTipo] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
   const bloque = bloquesData.find(b => b.id === selectedBloque)!;
   const ud = bloque.uds.find(u => u.id === selectedUD)!;
 
@@ -461,6 +682,33 @@ function RubricasSection({ bloquesData, titulo, descripcion, color }: { bloquesD
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{filteredRubricas.length} rúbricas</span>
+            
+            {/* Toggle Vista */}
+            <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setViewMode('cards')}
+                className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  viewMode === 'cards' 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                title="Vista de tarjetas"
+              >
+                📋 Tarjetas
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  viewMode === 'table' 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                title="Vista de tabla"
+              >
+                📊 Tabla
+              </button>
+            </div>
+
             <button
               onClick={() => exportUDToExcel(bloque.id, ud.id)}
               className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors flex items-center gap-1"
@@ -477,12 +725,16 @@ function RubricasSection({ bloquesData, titulo, descripcion, color }: { bloquesD
         </div>
       </div>
 
-      {/* Rubric Cards */}
-      <div className="space-y-3">
-        {filteredRubricas.map(r => (
-          <RubricaExpandible key={r.codigo} rubrica={r} />
-        ))}
-      </div>
+      {/* Rubric View */}
+      {viewMode === 'cards' ? (
+        <div className="space-y-3">
+          {filteredRubricas.map(r => (
+            <RubricaExpandible key={r.codigo} rubrica={r} />
+          ))}
+        </div>
+      ) : (
+        <RubricasTableView rubricas={filteredRubricas} />
+      )}
     </div>
   );
 }
@@ -620,6 +872,7 @@ export default function App() {
 
   const navItems: { id: Section; label: string; icon: string }[] = [
     { id: 'inicio', label: 'Inicio', icon: '🏠' },
+    { id: 'buscar', label: '🔍 Buscador Global', icon: '🔍' },
     { id: 'marco', label: 'A. Marco General', icon: '📐' },
     { id: 'maestras-ep', label: 'B.1. Rúbricas Maestras EP', icon: '🎓' },
     { id: 'maestras-ee', label: 'B.2. Rúbricas Maestras EE', icon: '🎼' },
@@ -698,6 +951,7 @@ export default function App() {
 
           {/* Section content */}
           {section === 'inicio' && <SectionInicio />}
+          {section === 'buscar' && <GlobalSearch />}
           {section === 'marco' && <SectionMarco />}
           {section === 'maestras-ep' && <SectionMaestrasEP />}
           {section === 'maestras-ee' && <SectionMaestrasEE />}

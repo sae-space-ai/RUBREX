@@ -1,1 +1,146 @@
 @import "tailwindcss";
+
+/* ============================================
+   RUBREX - Estilos de Impresión Optimizados
+   ============================================ */
+
+@media print {
+  /* Ocultar elementos de navegación */
+  aside,
+  button,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Configurar página */
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+
+  /* Resetear estilos para impresión */
+  body {
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #000;
+    background: #fff;
+  }
+
+  /* Asegurar que todo el contenido sea visible */
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Optimizar tarjetas para impresión */
+  .print-rubric {
+    page-break-inside: avoid;
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #fff;
+  }
+
+  /* Encabezados de página */
+  .print-header {
+    display: block;
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+  }
+
+  /* Pie de página */
+  .print-footer {
+    display: block;
+    text-align: center;
+    font-size: 8pt;
+    color: #666;
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+  }
+
+  /* Tablas optimizadas */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+
+  /* Evitar saltos de página en medio de elementos */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Asegurar que las imágenes se impriman */
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+
+  /* Enlaces visibles en impresión */
+  a {
+    text-decoration: underline;
+    color: #000;
+  }
+
+  /* No mostrar URLs internas */
+  a[href^="#"]:after,
+  a[href^="javascript"]:after {
+    content: "";
+  }
+}
+
+/* ============================================
+   RUBREX - Animaciones y Transiciones
+   ============================================ */
+
+.rubric-card {
+  transition: all 0.3s ease;
+}
+
+.rubric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Focus visible para navegación por teclado */
+*:focus-visible {
+  outline: 3px solid #4f46e5;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selección de texto con color de marca */
+::selection {
+  background-color: #4f46e5;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #4f46e5;
+  color: white;
+}
