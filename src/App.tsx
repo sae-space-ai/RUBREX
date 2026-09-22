@@ -4,12 +4,15 @@ import {
   tiposRubrica,
   rubricasMaestrasEP,
   rubricasMaestrasEE,
-  bloques,
+  bloques as bloquesEE,
   type RubricaDesarrollada,
   type MaestraRubric,
 } from './data/rubrics';
+import { bloquesEP } from './data/rubricsEP';
 
-type Section = 'inicio' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas';
+const bloques = [...bloquesEE, ...bloquesEP];
+
+type Section = 'inicio' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep';
 
 function NivelBadge({ nivel }: { nivel: string }) {
   const colors: Record<string, string> = {
@@ -97,7 +100,9 @@ function MaestraRubricCard({ rubric }: { rubric: MaestraRubric }) {
 }
 
 function SectionInicio() {
-  const totalRubricas = bloques.reduce((acc, b) => acc + b.uds.reduce((a, ud) => a + ud.rubricas.length, 0), 0);
+  const totalRubricasEE = bloquesEE.reduce((acc, b) => acc + b.uds.reduce((a, ud) => a + ud.rubricas.length, 0), 0);
+  const totalRubricasEP = bloquesEP.reduce((acc, b) => acc + b.uds.reduce((a, ud) => a + ud.rubricas.length, 0), 0);
+  const totalRubricas = totalRubricasEE + totalRubricasEP;
   const totalUDs = bloques.reduce((acc, b) => acc + b.uds.length, 0);
 
   return (
@@ -165,8 +170,10 @@ function SectionInicio() {
         <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
           <span className="text-xl">📊</span> Distribución por curso
         </h3>
-        <div className="grid md:grid-cols-3 gap-4">
-          {bloques.map(b => (
+        
+        <h4 className="font-semibold text-indigo-700 mb-3 text-sm">ENSEÑANZAS ELEMENTALES</h4>
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          {bloquesEE.map(b => (
             <div key={b.id} className="bg-gradient-to-br from-indigo-50 to-slate-50 rounded-lg p-4 border border-indigo-100">
               <h4 className="font-bold text-indigo-800">{b.nombre}</h4>
               <p className="text-xs text-gray-600 mt-1">{b.uds.length} UD × 14 rúbricas = {b.uds.length * 14} rúbricas</p>
@@ -174,6 +181,24 @@ function SectionInicio() {
                 {b.uds.map(ud => (
                   <div key={ud.id} className="text-xs text-gray-600 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full shrink-0"></span>
+                    <span>{ud.id}: {ud.titulo}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <h4 className="font-semibold text-purple-700 mb-3 text-sm">ENSEÑANZAS PROFESIONALES</h4>
+        <div className="grid md:grid-cols-3 gap-4">
+          {bloquesEP.map(b => (
+            <div key={b.id} className="bg-gradient-to-br from-purple-50 to-slate-50 rounded-lg p-4 border border-purple-100">
+              <h4 className="font-bold text-purple-800">{b.nombre}</h4>
+              <p className="text-xs text-gray-600 mt-1">{b.uds.length} UD × 14 rúbricas = {b.uds.length * 14} rúbricas</p>
+              <div className="mt-2 space-y-1">
+                {b.uds.map(ud => (
+                  <div key={ud.id} className="text-xs text-gray-600 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full shrink-0"></span>
                     <span>{ud.id}: {ud.titulo}</span>
                   </div>
                 ))}
@@ -301,11 +326,11 @@ function SectionMaestrasEE() {
   );
 }
 
-function SectionRubricas() {
-  const [selectedBloque, setSelectedBloque] = useState(bloques[0].id);
-  const [selectedUD, setSelectedUD] = useState(bloques[0].uds[0].id);
+function RubricasSection({ bloquesData, titulo, descripcion, color }: { bloquesData: typeof bloquesEE; titulo: string; descripcion: string; color: string }) {
+  const [selectedBloque, setSelectedBloque] = useState(bloquesData[0].id);
+  const [selectedUD, setSelectedUD] = useState(bloquesData[0].uds[0].id);
   const [filterTipo, setFilterTipo] = useState<string>('');
-  const bloque = bloques.find(b => b.id === selectedBloque)!;
+  const bloque = bloquesData.find(b => b.id === selectedBloque)!;
   const ud = bloque.uds.find(u => u.id === selectedUD)!;
 
   const filteredRubricas = filterTipo
@@ -314,11 +339,9 @@ function SectionRubricas() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-indigo-50 to-slate-50 rounded-xl p-5 border border-indigo-200">
-        <h2 className="text-xl font-bold text-indigo-900 mb-2">C. Rúbricas específicas por UD — Desarrollo completo</h2>
-        <p className="text-sm text-indigo-700">
-          Cada rúbrica incluye nombre, objetivo, indicadores observables, niveles de desempeño con descriptores detallados, ponderación y ejemplo de aplicación. Haz clic en cada rúbrica para expandirla.
-        </p>
+      <div className={`bg-gradient-to-r ${color} rounded-xl p-5 border`}>
+        <h2 className="text-xl font-bold mb-2">{titulo}</h2>
+        <p className="text-sm">{descripcion}</p>
       </div>
 
       {/* Selectors */}
@@ -330,13 +353,13 @@ function SectionRubricas() {
               value={selectedBloque}
               onChange={e => {
                 setSelectedBloque(e.target.value);
-                const b = bloques.find(bl => bl.id === e.target.value)!;
+                const b = bloquesData.find(bl => bl.id === e.target.value)!;
                 setSelectedUD(b.uds[0].id);
                 setFilterTipo('');
               }}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
-              {bloques.map(b => (
+              {bloquesData.map(b => (
                 <option key={b.id} value={b.id}>{b.nombre}</option>
               ))}
             </select>
@@ -395,6 +418,28 @@ function SectionRubricas() {
         ))}
       </div>
     </div>
+  );
+}
+
+function SectionRubricasEE() {
+  return (
+    <RubricasSection
+      bloquesData={bloquesEE}
+      titulo="C.1. Rúbricas EE específicas por UD — Desarrollo completo"
+      descripcion="Enseñanzas Elementales. Cada rúbrica incluye nombre, objetivo, indicadores observables, niveles de desempeño con descriptores detallados, ponderación y ejemplo de aplicación."
+      color="from-indigo-50 to-slate-50 border-indigo-200"
+    />
+  );
+}
+
+function SectionRubricasEP() {
+  return (
+    <RubricasSection
+      bloquesData={bloquesEP}
+      titulo="C.2. Rúbricas EP específicas por UD — Desarrollo completo"
+      descripcion="Enseñanzas Profesionales. Cada rúbrica incluye nombre, objetivo, indicadores observables, niveles de desempeño con descriptores detallados, ponderación y ejemplo de aplicación."
+      color="from-purple-50 to-slate-50 border-purple-200"
+    />
   );
 }
 
@@ -511,7 +556,8 @@ export default function App() {
     { id: 'marco', label: 'A. Marco General', icon: '📐' },
     { id: 'maestras-ep', label: 'B.1. Rúbricas Maestras EP', icon: '🎓' },
     { id: 'maestras-ee', label: 'B.2. Rúbricas Maestras EE', icon: '🎼' },
-    { id: 'rubricas', label: 'C. Rúbricas por UD', icon: '📊' },
+    { id: 'rubricas-ee', label: 'C.1. Rúbricas EE por UD', icon: '📊' },
+    { id: 'rubricas-ep', label: 'C.2. Rúbricas EP por UD', icon: '📋' },
   ];
 
   return (
@@ -588,7 +634,8 @@ export default function App() {
           {section === 'marco' && <SectionMarco />}
           {section === 'maestras-ep' && <SectionMaestrasEP />}
           {section === 'maestras-ee' && <SectionMaestrasEE />}
-          {section === 'rubricas' && <SectionRubricas />}
+          {section === 'rubricas-ee' && <SectionRubricasEE />}
+          {section === 'rubricas-ep' && <SectionRubricasEP />}
 
           {/* Footer */}
           <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-xs text-gray-400">
