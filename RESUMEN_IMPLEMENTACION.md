@@ -67,6 +67,12 @@ Cada rúbrica incluye:
 - Diseño responsive para móvil y escritorio
 - Tarjetas expandibles para ver detalles completos
 
+### Descargas
+- **Excel (XLSX)**: Exportación completa o por curso (EE/EP)
+- **PDF**: Exportación completa o por UD específica
+- Descarga individual de cada UD desde la vista de rúbricas
+- Botones de descarga en la página de inicio
+
 ### Secciones
 1. **Inicio**: Vista general con estadísticas
 2. **Marco General**: Escala común, tipos de rúbrica, codificación
@@ -80,6 +86,13 @@ Cada rúbrica incluye:
 - Por unidad didáctica
 - Por tipo de rúbrica (RT, RI, RA, RE, RC)
 
+### Funciones de Exportación Implementadas
+- `exportToExcel(tipo)` - Exporta rúbricas a Excel
+- `exportToPDF(tipo)` - Exporta rúbricas a PDF
+- `exportUDToExcel(bloqueId, udId)` - Exporta UD específica a Excel
+- `exportUDToPDF(bloqueId, udId)` - Exporta UD específica a PDF
+- Tipos disponibles: 'ee', 'ep', 'maestras-ep', 'maestras-ee', 'todas'
+
 ### Visualización
 - Badges de colores por nivel (L1-L4) y tipo
 - Indicadores observables como etiquetas visuales
@@ -91,14 +104,27 @@ Cada rúbrica incluye:
 ## Archivos del Proyecto
 
 ```
-src/
-├── data/
-│   ├── rubrics.ts          # EE1-EE3 + Rúbricas maestras (269 rúbricas)
-│   ├── rubricsEP.ts        # EP1-EP3 (252 rúbricas)
-│   └── rubricsEP456.ts     # EP4-EP6 (252 rúbricas)
-├── App.tsx                 # Componente principal
-├── main.tsx               # Punto de entrada
-└── index.css              # Estilos globales
+rubricas-clarinete/
+├── .gitignore              # Archivos ignorados por Git
+├── README.md               # Documentación principal
+├── INSTRUCCIONES_DESPLIEGUE.md  # Guía de despliegue
+├── RESUMEN_IMPLEMENTACION.md    # Este archivo
+├── vercel.json             # Configuración de Vercel
+├── package.json            # Dependencias y scripts
+├── tsconfig.json           # Configuración TypeScript
+├── vite.config.ts          # Configuración Vite
+├── index.html              # HTML principal
+├── src/
+│   ├── App.tsx            # Componente principal
+│   ├── main.tsx           # Punto de entrada
+│   ├── index.css          # Estilos globales
+│   ├── data/
+│   │   ├── rubrics.ts     # EE1-EE3 + Rúbricas maestras
+│   │   ├── rubricsEP.ts   # EP1-EP3
+│   │   └── rubricsEP456.ts # EP4-EP6
+│   └── utils/
+│       └── exportUtils.ts # Funciones de exportación
+└── dist/                   # Build de producción (generado)
 ```
 
 ---
@@ -108,7 +134,25 @@ src/
 - **React 18** con TypeScript
 - **Vite** como build tool
 - **Tailwind CSS** para estilos
+- **XLSX** para exportación a Excel
+- **jsPDF** + **jspdf-autotable** para exportación a PDF
 - **Componentes modulares** y reutilizables
+
+## Preparación para GitHub y Vercel
+
+### Archivos de configuración creados:
+✅ `.gitignore` - Archivos ignorados por Git
+✅ `README.md` - Documentación completa del proyecto
+✅ `vercel.json` - Configuración para despliegue en Vercel
+✅ `INSTRUCCIONES_DESPLIEGUE.md` - Guía paso a paso para despliegue
+
+### Pasos para desplegar:
+1. Crear repositorio en GitHub
+2. Subir el código con `git push`
+3. Conectar repositorio en Vercel
+4. Desplegar automáticamente
+
+Ver `INSTRUCCIONES_DESPLIEGUE.md` para instrucciones detalladas.
 
 ---
 

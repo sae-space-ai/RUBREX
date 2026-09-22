@@ -10,6 +10,7 @@ import {
 } from './data/rubrics';
 import { bloquesEP } from './data/rubricsEP';
 import { bloquesEP456 } from './data/rubricsEP456';
+import { exportToExcel, exportToPDF, exportUDToExcel, exportUDToPDF } from './utils/exportUtils';
 
 const bloques = [...bloquesEE, ...bloquesEP, ...bloquesEP456];
 
@@ -164,6 +165,44 @@ function SectionInicio() {
             <li><code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">R-EP[curso]-UD[nn]-[nn]</code> → Enseñanzas Profesionales</li>
             <li className="text-xs text-gray-500 mt-2">Ejemplo: <code className="bg-gray-100 px-1.5 py-0.5 rounded">R-EE1-UD01-01</code> = Rúbrica 1 de la UD01 de EE1</li>
           </ul>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <span className="text-xl">💾</span> Descargas
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <button
+            onClick={() => exportToExcel('todas')}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+          >
+            <span>📊</span> Excel Completo
+          </button>
+          <button
+            onClick={() => exportToPDF('todas')}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+          >
+            <span>📄</span> PDF Completo
+          </button>
+          <button
+            onClick={() => exportToExcel('ee')}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+          >
+            <span>📊</span> Excel EE
+          </button>
+          <button
+            onClick={() => exportToExcel('ep')}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+          >
+            <span>📊</span> Excel EP
+          </button>
+          <button
+            onClick={() => exportToPDF('ee')}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+          >
+            <span>📄</span> PDF EE
+          </button>
         </div>
       </div>
 
@@ -422,6 +461,18 @@ function RubricasSection({ bloquesData, titulo, descripcion, color }: { bloquesD
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{filteredRubricas.length} rúbricas</span>
+            <button
+              onClick={() => exportUDToExcel(bloque.id, ud.id)}
+              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors flex items-center gap-1"
+            >
+              <span>📊</span> Excel
+            </button>
+            <button
+              onClick={() => exportUDToPDF(bloque.id, ud.id)}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-semibold text-xs transition-colors flex items-center gap-1"
+            >
+              <span>📄</span> PDF
+            </button>
           </div>
         </div>
       </div>
