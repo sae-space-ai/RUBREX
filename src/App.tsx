@@ -23,10 +23,20 @@ import {
   contenidosEP,
   repertorioOrientativo 
 } from './data/programacion';
+import {
+  searchWikipedia,
+  searchMusicBrainzArtist,
+  searchDictionary,
+  getComposerInfo,
+  getMusicalTermDefinition,
+  type WikipediaPage,
+  type MusicBrainzArtist,
+  type DictionaryEntry
+} from './utils/apis';
 
 const bloques = [...bloquesEE, ...bloquesEP, ...bloquesEP456];
 
-type Section = 'inicio' | 'buscar' | 'programacion' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep';
+type Section = 'inicio' | 'buscar' | 'programacion' | 'marco' | 'maestras-ep' | 'maestras-ee' | 'rubricas-ee' | 'rubricas-ep' | 'apis';
 
 function NivelBadge({ nivel }: { nivel: string }) {
   const colors: Record<string, string> = {
@@ -491,6 +501,386 @@ function SectionInicio() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SectionAPIs() {
+  const [activeTab, setActiveTab] = useState<'compositor' | 'termino' | 'obras'>('compositor');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  // Estados para resultados
+  const [composerInfo, setComposerInfo] = useState<{
+    wikipedia: WikipediaPage | null;
+    musicbrainz: MusicBrainzArtist | null;
+  } | null>(null);
+  
+  const [termInfo, setTermInfo] = useState<{
+    dictionary: DictionaryEntry | null;
+    wikipedia: WikipediaPage | null;
+  } | null>(null);
+  
+  const [worksResults, setWorksResults] = useState<MusicBrainzArtist[]>([]);
+
+  const handleComposerSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setLoading(true);
+    try {
+      const info = await getComposerInfo(searchQuery);
+      setComposerInfo(info);
+    } catch (error) {
+      console.error('Error searching composer:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTermSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setLoading(true);
+    try {
+      const info = await getMusicalTermDefinition(searchQuery);
+      setTermInfo(info);
+    } catch (error) {
+      console.error('Error searching term:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleWorksSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setLoading(true);
+    try {
+      const results = await searchMusicBrainzArtist(searchQuery);
+      setWorksResults(results);
+    } catch (error) {
+      console.error('Error searching works:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = () => {
+    if (activeTab === 'compositor') handleComposerSearch();
+    else if (activeTab === 'termino') handleTermSearch();
+    else if (activeTab === 'obras') handleWorksSearch();
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-cyan-600 via-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-5xl">🌐</span>
+          <div>
+            <h2 className="text-3xl font-bold">Recursos Externos</h2>
+            <p className="text-blue-100 text-sm mt-1">Integración de APIs Gratuitas y Seguras</p>
+          </div>
+        </div>
+        <p className="text-blue-50 text-sm leading-relaxed max-w-3xl">
+          RUBREX integra múltiples APIs gratuitas para enriquecer la experiencia educativa con información 
+          contextual sobre compositores, obras, términos musicales y recursos multimedia.
+        </p>
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl">📚</div>
+            <div className="text-xs text-blue-100 mt-1">Wikipedia</div>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl">🎵</div>
+            <div className="text-xs text-blue-100 mt-1">MusicBrainz</div>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl">📖</div>
+            <div className="text-xs text-blue-100 mt-1">Dictionary</div>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl">🎼</div>
+            <div className="text-xs text-blue-100 mt-1">IMSLP</div>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+            <div className="text-2xl">📹</div>
+            <div className="text-xs text-blue-100 mt-1">YouTube</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="flex overflow-x-auto border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('compositor')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'compositor'
+                ? 'text-cyan-600 border-b-2 border-cyan-600 bg-cyan-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            👨‍🎼 Buscar Compositor
+          </button>
+          <button
+            onClick={() => setActiveTab('termino')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'termino'
+                ? 'text-cyan-600 border-b-2 border-cyan-600 bg-cyan-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            📖 Término Musical
+          </button>
+          <button
+            onClick={() => setActiveTab('obras')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+              activeTab === 'obras'
+                ? 'text-cyan-600 border-b-2 border-cyan-600 bg-cyan-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            🎼 Obras y Repertorio
+          </button>
+        </div>
+
+        <div className="p-6">
+          {/* Search Box */}
+          <div className="mb-6">
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                placeholder={
+                  activeTab === 'compositor' ? 'Ej: Mozart, Beethoven, Debussy...' :
+                  activeTab === 'termino' ? 'Ej: staccato, legato, embocadura...' :
+                  'Ej: Concerto for Clarinet, Sonata...'
+                }
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+              />
+              <button
+                onClick={handleSearch}
+                disabled={loading || !searchQuery.trim()}
+                className="px-6 py-3 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? '⏳ Buscando...' : '🔍 Buscar'}
+              </button>
+            </div>
+          </div>
+
+          {/* Results */}
+          {activeTab === 'compositor' && composerInfo && (
+            <div className="space-y-6">
+              {composerInfo.wikipedia && (
+                <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                  <div className="flex items-start gap-4">
+                    {composerInfo.wikipedia.thumbnail && (
+                      <img 
+                        src={composerInfo.wikipedia.thumbnail.source} 
+                        alt={composerInfo.wikipedia.title}
+                        className="w-32 h-32 object-cover rounded-lg"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-blue-900 mb-2">
+                        {composerInfo.wikipedia.title}
+                      </h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                        {composerInfo.wikipedia.extract}
+                      </p>
+                      <a 
+                        href={composerInfo.wikipedia.fullurl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:underline"
+                      >
+                        Leer más en Wikipedia →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {composerInfo.musicbrainz && (
+                <div className="bg-purple-50 rounded-lg p-6 border border-purple-200">
+                  <h3 className="text-lg font-bold text-purple-900 mb-3">
+                    Información de MusicBrainz
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <p><strong>Nombre:</strong> {composerInfo.musicbrainz.name}</p>
+                    {composerInfo.musicbrainz.country && (
+                      <p><strong>País:</strong> {composerInfo.musicbrainz.country}</p>
+                    )}
+                    {composerInfo.musicbrainz.life_span && (
+                      <p>
+                        <strong>Período:</strong> {composerInfo.musicbrainz.life_span.begin || '?'} - {composerInfo.musicbrainz.life_span.end || 'presente'}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {!composerInfo.wikipedia && !composerInfo.musicbrainz && (
+                <div className="bg-gray-50 rounded-lg p-6 text-center text-gray-500">
+                  No se encontró información para "{searchQuery}"
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'termino' && termInfo && (
+            <div className="space-y-6">
+              {termInfo.dictionary && (
+                <div className="bg-green-50 rounded-lg p-6 border border-green-200">
+                  <h3 className="text-xl font-bold text-green-900 mb-3">
+                    {termInfo.dictionary.word}
+                  </h3>
+                  {termInfo.dictionary.phonetic && (
+                    <p className="text-sm text-gray-600 mb-3 italic">
+                      {termInfo.dictionary.phonetic}
+                    </p>
+                  )}
+                  <div className="space-y-4">
+                    {termInfo.dictionary.meanings.map((meaning, idx) => (
+                      <div key={idx}>
+                        <p className="text-sm font-semibold text-green-800 mb-2">
+                          {meaning.partOfSpeech}
+                        </p>
+                        <ul className="space-y-2">
+                          {meaning.definitions.slice(0, 3).map((def, defIdx) => (
+                            <li key={defIdx} className="text-sm text-gray-700">
+                              <span className="font-medium">{defIdx + 1}.</span> {def.definition}
+                              {def.example && (
+                                <p className="text-xs text-gray-500 italic mt-1 ml-4">
+                                  Ej: "{def.example}"
+                                </p>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {termInfo.wikipedia && (
+                <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                  <h3 className="text-lg font-bold text-blue-900 mb-2">
+                    {termInfo.wikipedia.title}
+                  </h3>
+                  <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                    {termInfo.wikipedia.extract}
+                  </p>
+                  <a 
+                    href={termInfo.wikipedia.fullurl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    Leer más en Wikipedia →
+                  </a>
+                </div>
+              )}
+
+              {!termInfo.dictionary && !termInfo.wikipedia && (
+                <div className="bg-gray-50 rounded-lg p-6 text-center text-gray-500">
+                  No se encontró información para "{searchQuery}"
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'obras' && worksResults.length > 0 && (
+            <div className="space-y-3">
+              {worksResults.map((artist) => (
+                <div key={artist.id} className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+                  <h3 className="font-bold text-indigo-900">{artist.name}</h3>
+                  {artist.country && (
+                    <p className="text-sm text-gray-600">{artist.country}</p>
+                  )}
+                  {artist.life_span && (
+                    <p className="text-xs text-gray-500">
+                      {artist.life_span.begin || '?'} - {artist.life_span.end || 'presente'}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === 'obras' && worksResults.length === 0 && !loading && searchQuery && (
+            <div className="bg-gray-50 rounded-lg p-6 text-center text-gray-500">
+              No se encontraron resultados para "{searchQuery}"
+            </div>
+          )}
+
+          {!searchQuery && (
+            <div className="bg-gray-50 rounded-lg p-8 text-center">
+              <p className="text-gray-500">
+                {activeTab === 'compositor' && '👨‍🎼 Busca información sobre compositores'}
+                {activeTab === 'termino' && '📖 Busca definiciones de términos musicales'}
+                {activeTab === 'obras' && '🎼 Busca obras y repertorio'}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* APIs Info */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-800 mb-4">APIs Integradas</h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <h4 className="font-bold text-blue-900 mb-2">📚 Wikipedia API</h4>
+            <p className="text-xs text-gray-700 mb-2">Información contextual sobre compositores, obras y términos musicales</p>
+            <div className="flex gap-2">
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Gratis</span>
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">HTTPS</span>
+            </div>
+          </div>
+          <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+            <h4 className="font-bold text-purple-900 mb-2">🎵 MusicBrainz API</h4>
+            <p className="text-xs text-gray-700 mb-2">Metadatos de compositores, obras y grabaciones</p>
+            <div className="flex gap-2">
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Gratis</span>
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">HTTPS</span>
+            </div>
+          </div>
+          <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+            <h4 className="font-bold text-green-900 mb-2">📖 Free Dictionary API</h4>
+            <p className="text-xs text-gray-700 mb-2">Definiciones de términos musicales y técnicos</p>
+            <div className="flex gap-2">
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Gratis</span>
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">HTTPS</span>
+            </div>
+          </div>
+          <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+            <h4 className="font-bold text-orange-900 mb-2">🎼 IMSLP</h4>
+            <p className="text-xs text-gray-700 mb-2">Partituras de dominio público</p>
+            <div className="flex gap-2">
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Gratis</span>
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">HTTPS</span>
+            </div>
+          </div>
+          <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+            <h4 className="font-bold text-red-900 mb-2">📹 YouTube Data API</h4>
+            <p className="text-xs text-gray-700 mb-2">Vídeos de referencia de obras y técnicas</p>
+            <div className="flex gap-2">
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">10k/día</span>
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">HTTPS</span>
+            </div>
+          </div>
+          <div className="bg-cyan-50 rounded-lg p-4 border border-cyan-200">
+            <h4 className="font-bold text-cyan-900 mb-2">🎧 Spotify API</h4>
+            <p className="text-xs text-gray-700 mb-2">Grabaciones de referencia</p>
+            <div className="flex gap-2">
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Gratis</span>
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">OAuth</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1353,6 +1743,7 @@ export default function App() {
     { id: 'inicio', label: 'Inicio', icon: '🏠' },
     { id: 'buscar', label: '🔍 Buscador Global', icon: '🔍' },
     { id: 'programacion', label: '📚 Programación Didáctica', icon: '📚' },
+    { id: 'apis', label: '🌐 Recursos Externos', icon: '🌐' },
     { id: 'marco', label: 'A. Marco General', icon: '📐' },
     { id: 'maestras-ep', label: 'B.1. Rúbricas Maestras EP', icon: '🎓' },
     { id: 'maestras-ee', label: 'B.2. Rúbricas Maestras EE', icon: '🎼' },
@@ -1433,6 +1824,7 @@ export default function App() {
           {section === 'inicio' && <SectionInicio />}
           {section === 'buscar' && <GlobalSearch />}
           {section === 'programacion' && <SectionProgramacion />}
+          {section === 'apis' && <SectionAPIs />}
           {section === 'marco' && <SectionMarco />}
           {section === 'maestras-ep' && <SectionMaestrasEP />}
           {section === 'maestras-ee' && <SectionMaestrasEE />}
